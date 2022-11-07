@@ -1,0 +1,105 @@
+* {
+        margin:0;
+        box-sizing: border-box;
+    }
+    body {
+        display: flex;
+        overflow-x:hidden;
+        width:100vw;
+        height:100vh;
+        font-family: "JetBrains Mono",Consolas,sans-serif;
+    }
+    .body {
+        /*display: flex;*/
+        justify-content: center;
+        align-items: center;
+        width:100%;
+        height:100%;
+        background: url("https://cdn.pixabay.com/photo/2022/09/02/07/31/alps-7426887_1280.jpg") no-repeat center;
+        /*backdrop-filter: ;*/
+        background-size: cover;
+        backdrop-filter: blur(5px);
+    }
+    header {
+        /*position: relative;*/
+        background-color: rgba(256,256,256,0.85);
+        backdrop-filter: blur(50px);
+        text-align: center;
+        height:10vh;
+        width:100vw;
+        line-height: 10vh;
+        box-shadow: 0 10px 16px -11px #686de0;
+        position:fixed;
+        z-index: 99;
+    }
+    header h1 {
+        display: inline;
+        text-align: center;
+    }
+    header span {
+        font-size: 15px;
+        font-style: italic;
+        font-weight: 300;
+        float: right;
+    }
+    main {
+        display: flex;
+        flex-direction: column;
+        width:30vw;
+        height:70vh;
+        margin-left: 40vw;
+        margin-top: 20vh;
+        padding:10px;
+        border-radius: 10px;
+        backdrop-filter: blur(30px);
+        align-items: center;
+        justify-content: center;
+
+    }
+    main textarea {
+        margin-top: 10px;
+        width:70%;
+        height:70%;
+        border: none;
+        background-color: rgba(256,256,256,0.9);
+        border-radius: 10px;
+        text-indent: 5px;
+        resize: none;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+    }
+    main textarea:focus {
+        outline: none;
+    }
+    .button {
+        margin: 5px;
+        width:80%;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .button button{
+        border:none;
+        margin:3px;
+        width:40%;
+        background-color: white;
+        display: inline;
+        height: 40px;
+        border-radius: 5px;
+        box-shadow: 0 10px 16px -11px #686de0;
+        cursor: pointer;
+    }
+
+    .button button:active{
+        background-color: #686de0;
+        color: white;
+        transform: scale(0.94);
+        transition: all 0.2s ease-in-out;
+    }
+
+    #uploadFileInput {
+        display: none;
+    }

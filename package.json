@@ -1,0 +1,8 @@
+{
+  "name": "flaskProject",
+  "version": "1.0.0",
+  "dependencies": {
+    "jquery": "^3.6.1",
+    "vue": "^3.2.41"
+  }
+}

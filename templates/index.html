@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>文本相似度查询</title>
+</head>
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename = 'CSS/style.css') }}">
+    <script type = 'text/javascript'  src = "{{ url_for('static', filename = 'jquery/jquery-3.6.1.min.js') }}"></script>
+    <script  src="{{ url_for('static',filename = 'Script/script.js') }}"></script>
+{% endblock %}
+
+<body>
+    <div class="body" id = "main">
+           <header>
+                <h1 id = 'head'>使用flask+html+js实现文本文本相似度查询</h1>
+                <span>2021218189 邢智博</span>
+            </header>
+
+        <main>
+            <label for="input"></label><textarea name="input" id="input" cols="30" rows="10" placeholder="输入文本进行相似度查询....."></textarea>
+            <div class="button">
+                <button id = "uploadFileButton">上传文件</button>
+                <input type = "file" id = "uploadFileInput" name = "filePicker" accept=".txt">
+                <button id = "CommitBtn">提交</button>
+            </div>
+
+        </main>
+    </div>
+
+
+{#    <script type = "text/javascript" src = "../static/Script/script.js"></script>#}
+<!--    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>-->
+
+</body>
+</html>
