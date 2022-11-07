@@ -1,0 +1,2 @@
+# TextSimilarity
+一个flask+jQuery的项目,实现文本相似度查询.作为Python必修课和Python选修课大作业
