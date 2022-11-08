@@ -26,7 +26,8 @@ class CosineSimilarity:
         return oneHotCode
 
     # 计算余弦相似度
-    def getSimilarity(self):
+    @property
+    def Similarity(self):
         # extract_tags本身返回的就是出现频率最高的20个词,那么接下来的union至多40个单词
         text1 = jieba.analyse.extract_tags(self.text1)
         text2 = jieba.analyse.extract_tags(self.text2)
@@ -59,6 +60,7 @@ class SimhashSimilarity:
         self.text1 = string1
         self.text2 = string2
 
+    @property
     def getSimilarity(self):
         # 生成Simhash对象
         simhash1 = Simhash(self.text1)

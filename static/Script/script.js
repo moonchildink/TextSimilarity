@@ -11,7 +11,7 @@ $(function(){
 
     })
     function uploadText(event){
-        let text = $("#input").val();
+        let text = $("#floatingTextarea").val();
         console.log(text);
         event.preventDefault();
         $.ajax({
@@ -28,7 +28,7 @@ $(function(){
         let Form = new FormData();
         Form.append("file",file);
         $.ajax({
-            url:"/text/file",
+            url:"/text/file/",
             method:"POST",
             data:Form,
             async:false,
