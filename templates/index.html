@@ -2,9 +2,12 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>文本相似度查询</title>
 </head>
 {% block head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static',filename = 'CSS/style.css') }}">
     <script type = 'text/javascript'  src = "{{ url_for('static', filename = 'jquery/jquery-3.6.1.min.js') }}"></script>
     <script  src="{{ url_for('static',filename = 'Script/script.js') }}"></script>
@@ -13,15 +16,23 @@
 <body>
     <div class="body" id = "main">
            <header>
-                <h1 id = 'head'>使用flask+html+js实现文本文本相似度查询</h1>
+                <h1 id = 'head'>使用flask+html+js实现文本相似度查询</h1>
                 <span>2021218189 邢智博</span>
             </header>
 
         <main>
-            <label for="input"></label><textarea name="input" id="input" cols="30" rows="10" placeholder="输入文本进行相似度查询....."></textarea>
+{#            <label for="input"></label><textarea name="input" id="input" cols="30" rows="10" placeholder="输入文本进行相似度查询....."></textarea>#}
+            <div class="mb-3">
+                <label for="formFile" class="form-label"></label>
+                <input class="form-control" type="file" id="formFile" accept=".txt">
+            </div>
+            <div class="form-floating">
+                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                <label for="floatingTextarea">Text</label>
+            </div>
             <div class="button">
-                <button id = "uploadFileButton">上传文件</button>
-                <input type = "file" id = "uploadFileInput" name = "filePicker" accept=".txt">
+{#                <button id = "uploadFileButton">上传文件</button>#}
+{#                <input type = "file" id = "uploadFileInput" name = "filePicker" accept=".txt">#}
                 <button id = "CommitBtn">提交</button>
             </div>
 

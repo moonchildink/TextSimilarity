@@ -1,9 +1,13 @@
 $(function(){
     let FileOrInput = 1   //判断用户是上传文件还是直接上传文本,1为默认状态,表示文本
-    $("#uploadFileButton").click((event)=>{
-        // 判断用户是否成功上传
-        $("#uploadFileInput").click()
-        FileOrInput = 0
+    let file = undefined;
+    $("#formFile").change(function(event){
+        file = event.target.files[0];
+        if(file){
+            console.log(file);
+            FileOrInput = 0;
+        }
+
 
     })
     function uploadText(event){
@@ -21,10 +25,13 @@ $(function(){
         })
     }
     function uploadFile(event){
+        let Form = new FormData();
+        Form.append("file",file);
         $.ajax({
             url:"/text/file",
             method:"POST",
-            data:fd,
+            data:Form,
+            async:false,
             processData:false,
             contentType:false,
             success:(res)=>{
@@ -38,12 +45,8 @@ $(function(){
         if(FileOrInput)
             uploadText(event)
         else {
-            let files = $("#uploadFileInput").prop('files');
-
-            let data = new FormData();
-            data.append('uploadFileInput',files[0])
-
-            uploadFile(event)
+            console.log(file);  //此处可以获取到file
+            uploadFile(event);
         }
     })
 });
