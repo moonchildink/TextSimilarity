@@ -1,10 +1,11 @@
 import os
 import webbrowser
-from flask import Flask, jsonify, url_for, redirect, request, render_template, flash
-import config
-import json
+
+from flask import Flask, redirect, request, render_template, flash
 from werkzeug.utils import secure_filename
-from main import SimhashSimilarity, CosineSimilarity
+
+import config
+from main import SimhashSimilarity, CosineSimilarity, readFile, ProcessInput
 
 app = Flask(__name__)
 # 添加配置文件
@@ -30,30 +31,37 @@ def isFileExtensionAllowed(filename: str) -> bool:
 
 @app.route("/text/file/", methods=["GET", "POST"])
 def uploadFile():
-    file = request.files['file']
-    if request.method == "POST" and file and isFileExtensionAllowed(file.filename):
-        flash("No file part")
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))  # 最终保存文件
-        print("No file part")
-        return redirect('/')
-    # file = request.files['file']
-    # if file.filename == '':
-    #     flash('no selected file')
-    #     print("have no file name")
-    # if file and isFileExtensionAllowed(file.filename):
-    #     print("保存文件")
-    #     print(file.filename)
-    #     filename = secure_filename(file.filename)
-    #     file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))  # 最终保存文件
-    #     return redirect(url_for('inx', filename=index))
+    file1 = request.files.get("file1")
+    file2 = request.files.get("file2")
+    fileList = os.listdir(config.UPLOAD_FOLDER)
+    num = fileList.count(file1.filename)
+    if num > 0:
+        file1.filename = file1.filename.split('.')[0]+'({0})'.format(num)+'.txt'
+    num = fileList.count(file2.filename)
+    if num > 0:
+        file2.filename = file2.filename.split('.')[0]+'({0})'.format(num)+'.txt'
+    if file1 and file2:
+        if isFileExtensionAllowed(file1.filename) and isFileExtensionAllowed(file2.filename):
+            file1.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file1.filename)))
+            file2.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file2.filename)))
+            text1 = readFile(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file1.filename)))
+            text2 = readFile(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file2.filename)))
+            return str(ProcessInput(text1, text2))
+        else:
+            return "Error"
 
 
 # 此路由用于获取用户输入的文本
-@app.route("/text")
+@app.route("/text/", methods=["GET", "POST"])
 def getSimilarity():
-    text = request.args.get("text")
-    return 'success'
+    text1 = request.form.get("text1")
+    text2 = request.form.get("text2")
+    print(text1, text2)
+    res = ProcessInput(text1, text2)
+    print(res)
+    return res
+
+
 
 
 if __name__ == '__main__':

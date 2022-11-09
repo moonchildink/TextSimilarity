@@ -1,6 +1,6 @@
-# %%
 from simhash import Simhash
 from simhash import SimhashIndex
+import re
 import jieba
 import jieba.analyse  # 基于TF-IDF算法地关键词提取,会返回权重最大的几个词汇
 from sklearn.metrics.pairwise import cosine_similarity
@@ -43,9 +43,9 @@ class CosineSimilarity:
         # return 1 - cosine_similarity([text1OneHotCode, text2OneHotCode])
         try:
             sim = cosine_similarity([text1OneHotCode, text2OneHotCode])
-            print("文本相似度:%.2f%%" % (sim[1][0] * 100))
-            print()
-            return sim[1][0]
+            # print("文本相似度:%.2f%%" % (sim[1][0] * 100))
+            # print()
+            return sim[1][0]*100
         except Exception as e:
             print(e)
             return 0.0
@@ -73,3 +73,18 @@ class SimhashSimilarity:
         print("文本相似度:%.2f%%" % (similarity * 100))
         print()
         return similarity
+
+
+def readFile(filePath):
+    with open(filePath, 'r', encoding='utf-8') as f:
+        text = f.read()
+    text = text.replace('\n', '')
+    text = ''.join(re.findall('[\u4e00-\u9fa5]', text))
+    return text
+
+
+def ProcessInput(text1, text2):
+    if len(text1) < 100 and len(text2) < 100:
+        return str(CosineSimilarity(text1, text2).Similarity)
+    else:
+        return SimhashSimilarity(text1, text2).getSimilarity

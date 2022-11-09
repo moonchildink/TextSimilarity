@@ -19,6 +19,9 @@
         /*backdrop-filter: ;*/
         background-size: cover;
         backdrop-filter: blur(5px);
+
+        /*加入动画效果*/
+        transition: all 0.5s ease;
     }
     header {
         /*position: relative;*/
@@ -91,6 +94,7 @@
         border-radius: 5px;
         box-shadow: 0 10px 16px -11px #686de0;
         cursor: pointer;
+        bottom:20px;
     }
 
     .button button:active{
@@ -105,3 +109,12 @@
         height:30vh;
         resize: none;
     }
+    /*.chgColor {*/
+    /*    background-color: transparent;*/
+    /*    !*color: white;*!*/
+    /*    color: #686de0;*/
+    /*}*/
+    /*.chgColor:active {*/
+    /*    background-color: #686de0;*/
+    /*    color: white;*/
+    /*}*/
