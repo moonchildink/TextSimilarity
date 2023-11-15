@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>文本相似度查询</title>
+</head>
+{% block head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+            integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static',filename = 'CSS/style.css') }}">
+    <script type='text/javascript' src="{{ url_for('static', filename = 'jquery/jquery-3.6.1.min.js') }}"></script>
+    <script src="{{ url_for('static',filename = 'Script/script.js') }}"></script>
+{% endblock %}
+
+<body>
+<div class="body" id="main">
+    <header>
+        <h1 id='head'>使用flask+html+js实现文本相似度查询</h1>
+    </header>
+    <main>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="btnradio1">提交文件</label>
+        </div>
+        <div id="inputFile">
+            <div class="input-group">
+                <input type="file" class="form-control" aria-describedby="inputGroupFileAddon04"
+                       aria-label="Upload"
+                       accept=".txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                       id="formFile1" multiple="multiple">
+                <button class="btn btn-outline-primary" type="button" id="slide_down_button" disabled
+                        data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-controls="collapseExample">
+                    展开
+                </button>
+                <div class="collapse" id="collapseExample">
+
+{#                    下拉框#}
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
+                            <label class="form-check-label" for="firstCheckbox">First checkbox</label>
+                        </li>
+                    </ul>
+
+{#                    分页#}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div>
+
+        </div>
+        <div class="button">
+            <button id="CommitBtn">提交</button>
+        </div>
+    </main>
+</div>
+</body>
+</html>
