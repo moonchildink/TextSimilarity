@@ -11,6 +11,10 @@ class Docx(db.Model):
     upload_time = db.Column(db.DateTime, default=datetime.datetime.utcnow())
     timestamp = db.Column(db.String(16), nullable=False)
     client_ip = db.Column(db.String(32), nullable=False)
+    author = db.Column(db.String(32), nullable=True)
+    created = db.Column(db.Datetime, nullable=True)
+    modified = db.Column(db.Datetime, nullable=True)
+    last_saved_by = db.Column(db.String(32), nullable=True)
 
     def to_json(self):
         return jsonify({
