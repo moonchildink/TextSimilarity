@@ -64,13 +64,14 @@ def upload_file():
     if is_file_extension_allowed(file1.filename):
         if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
             os.mkdir(current_app.config['UPLOAD_FOLDER'])
-        # 对过长的文件名进行处理
-        file1_save_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file1.filename)
-        if len(file1_save_path) > 64:
+
+        if file1.filename > current_app.config['MAX_FILENAME_LENGTH']:
             rename = str(int(datetime.timestamp(datetime.utcnow())))[-5:] + random.choice(string.ascii_letters)
-            file1_save_path = os.path.join(rename + file1.filename.rsplit('.', 1)[-1])
-        file1.save(file1_save_path)
-        file1_path = convert_file_type(file1_save_path)
+        else:
+            rename = file1.filename
+        file1.save(os.path.join(current_app.config['UPLOAD_FOLDER']), rename)
+        file1_path = convert_file_type(rename)
+
         time = datetime.utcnow()
         time_stamp = str(int(datetime.timestamp(time)))
         client_ip = str(request.remote_addr)
@@ -78,6 +79,7 @@ def upload_file():
         db.session.add(doc)
         db.session.commit()
         return doc.to_json()
+
     else:
         info = (f"request file types are showing as bellow:{current_app.config.ALLOWED_EXTENSION},"
                 f"while your file are {file1.filename.rsplit('.', 1)[-1]}")
