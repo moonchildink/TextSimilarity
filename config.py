@@ -10,7 +10,6 @@ class Config:
     ALLOWED_EXTENSION = ['docx', 'doc', 'txt']
     SESSION_TYPE = 'filesystem'
     SESSION_PERMANENT = False
-
     MAX_FILENAME_LENGTH = 64
     @staticmethod
     def init_app(app):
@@ -25,6 +24,7 @@ class DeploymentConfig(Config):
 class DevelopmentConfig(Config):
     DEBUG = True
     UPLOAD_FOLDER = r'D:\code\Python\TextSimilarity\UploadFolder'
+    TEMP_FILE_DIR = r'D:\code\Python\TextSimilarity\temp_file'
     HOSTNAME = '127.0.0.1'
     PORT = '3306'
     USERNAME = 'root'

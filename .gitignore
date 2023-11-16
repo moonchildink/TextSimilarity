@@ -2,3 +2,6 @@
 *.ipynb
 /UploadFolder
 /venv
+output.html
+output.md
+/temp_file
