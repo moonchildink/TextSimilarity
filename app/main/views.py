@@ -1,6 +1,7 @@
+import random
+import string
 from . import main
-from flask import render_template, request, current_app
-from config import config
+from flask import render_template, request, current_app, jsonify
 import os
 from .errors import unsupported_media_type, arg_required
 from ..Convertor import Convertor
@@ -9,6 +10,7 @@ from ..CosineSimilarity import CosineSimilarity
 from ..model import Docx
 from datetime import datetime
 from .. import db
+from app.Docx import Document
 
 
 def is_file_extension_allowed(filename: str) -> bool:
@@ -62,7 +64,11 @@ def upload_file():
     if is_file_extension_allowed(file1.filename):
         if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
             os.mkdir(current_app.config['UPLOAD_FOLDER'])
+        # 对过长的文件名进行处理
         file1_save_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file1.filename)
+        if len(file1_save_path) > 64:
+            rename = str(int(datetime.timestamp(datetime.utcnow())))[-5:] + random.choice(string.ascii_letters)
+            file1_save_path = os.path.join(rename + file1.filename.rsplit('.', 1)[-1])
         file1.save(file1_save_path)
         file1_path = convert_file_type(file1_save_path)
         time = datetime.utcnow()
@@ -79,9 +85,28 @@ def upload_file():
         return res
 
 
+@main.route('/my_file', methods=['GET'])
+def get_my_file():
+    """
+    :return: 用户远程IP地址下的所有文件名称，以供用户进行选择。
+    """
+    request_ip = request.remote_addr
+    file_list = Docx.query.filter_by(client_ip=request_ip).all()
+
+    file_name_list = [i.file_path for i in file_list]
+    return jsonify({
+        'filenames': file_name_list
+    })
+
+
 @main.route('/most_similar', methods=['GET'])
 def get_most_similar():
     """
+    在我的文件中查找最相似的文件
     :return:
     """
-    pass
+    request_ip = request.remote_addr
+    file_list = Docx.query.filter_by(client_ip=request_ip).all()
+    documents_list = []
+    for file in file_list:
+        documents_list.append(Document(file.file_path))

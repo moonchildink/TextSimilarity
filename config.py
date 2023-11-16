@@ -8,6 +8,10 @@ class Config:
     SECRET_KEY = os.environ.get(
         'SECRET_KEY') or 'vz\x92\xf1\xa5\xfc7\xef\xe1\xa9\xa6\xd0\xcd\xad\xd0\x81\x14/\x07F\xe1\x0f\x90\x8c'
     ALLOWED_EXTENSION = ['docx', 'doc', 'txt']
+    SESSION_TYPE = 'filesystem'
+    SESSION_PERMANENT = False
+
+    MAX_FILENAME_LENGTH = 64
     @staticmethod
     def init_app(app):
         pass
