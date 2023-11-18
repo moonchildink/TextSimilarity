@@ -9,9 +9,9 @@ app = creat_app(os_name=os_name)
 migrate = Migrate(app, db)
 
 
-@app.shell_context_processors
-def make_shell_context():
-    return dict(db=db, Docx=Docx)
+# @app.shell_context_processors
+# def make_shell_context():
+#     return dict(db=db, Docx=Docx)
 
 
 with app.app_context():

@@ -13,35 +13,160 @@ $(function () {
         });
     }
 
+    async function getRequest(url) {
+        return new Promise((res, reject) => {
+            $.ajax({
+                url: url,
+                method: 'GET',
+                processData: false,
+                contentType: false,
+                success: res,
+                error: reject
+            })
+        })
+    }
+
     let FileOrInput = 0;
     let files = undefined;
     let File = $("#inputFile");
     let Text = $("#inputText");
+    // let nextPage =
     Text.css("display", "none");
     File.css("display", "block");
+    let pagination1 = $("#pagination1");
+    let myFileList = $("#myFileList");
+
+
+    function init() {
+        // myFileList.css({'display': 'none'});
+        $("#file-list-container").empty();
+        pagination1.hide();
+        previous_page.hide();
+        next_page.hide();
+    }
+
+
+    $("#checkSimilarityButton").click((event) => {
+
+    })
+
+    $("#uploadFilePageNav").click((event) => {
+        $("#uploadPage").show();
+        $("#myFileList").hide();
+    });
+
+    $("#myFilePageNav").click((event) => {
+        $("#myFilePage").show();
+        myFileList.show();
+        myFileList.empty();
+        $("#uploadPage").hide();
+
+        // 向服务器请求我的全部文件
+        getRequest('/my_file')
+            .then((res) => {
+                console.log(res);
+
+                let list_item = "<div class=\"aaaa\">\n" +
+                    "    <li class=\"list-group-item d-flex justify-content-between align-items-start\">\n" +
+                    "        <div class=\"ms-2 me-auto\">\n" +
+                    "            <div class=\"fw-bold\">\n" +
+                    "                <p class=\"ppp\">tezt</p>\n" +
+                    "            </div>\n" +
+                    "            <p class='aaa'></p>\n" +
+                    "        </div>\n" +
+                    "    </li>    \n" +
+                    "</div>";
+                let my_file_count = res.file_count;
+                let files = res.filenames;
+                let authors = res.authors;
+                // 添加列表项
+                for (let i = 0; i < my_file_count; i++)
+                    $("#myFileList").append(list_item);
+                $(".ppp").each((index, element) => {
+                    element.innerHTML = files[index];
+                });
+                $(".aaa").each((index, element) => {
+                    element.innerHTML = authors[index];
+                });
+
+
+                let itemsPerPage = 10;
+                let totalPages = Math.ceil(my_file_count / itemsPerPage);
+                let currentPage = 1;
+
+
+                function showPage(page) {
+                    console.log("showPage");
+                    $("#myFileList .aaaa").hide();
+                    let startIndex = (page - 1) * itemsPerPage;
+                    let endIndex = startIndex + itemsPerPage;
+                    $("#myFileList .aaaa").slice(startIndex, endIndex).show();
+                }
+
+
+                function generatePagination() {
+                    let previous = "<li class=\"page-item\" id='previous-page'>\n" +
+                        "    <a class=\"page-link\" aria-label=\"Previous\">\n" +
+                        "        <span aria-hidden=\"true\"> << </span>\n" +
+                        "    </a>\n" +
+                        "</li>";
+
+                    let next = "<li class=\"page-item\" id='next-page'>\n" +
+                        "    <a class=\"page-link\" aria-label=\"Previous\">\n" +
+                        "        <span aria-hidden=\"true\"> >> </span>\n" +
+                        "    </a>\n" +
+                        "</li>";
+                    let page_item = "<li class=\"page-item\"><a class=\"page-link\"> </a></li>";
+                    $(".pagination").empty();
+                    $(".pagination").append(previous);
+                    for (let i = 1; i <= totalPages; i++) {
+                        let li = $(page_item);
+                        let aTag = li.find('a.page-link');
+                        aTag.text(i);
+                        if (i === currentPage)
+                            li.addClass('active');
+                        $(".pagination").append(li);
+                    }
+                    $(".pagination").append(next);
+                }
+
+                showPage(currentPage);
+                generatePagination();
+                $("#pagination2").on('click', 'li', function () {
+                    console.log($(this)[0].id);
+                    console.log($(this));
+                    if ($(this)[0].id === 'previous-page' && currentPage > 1) {
+                        showPage(currentPage - 1);
+                    } else if ($(this)[0].id === 'next-page' && currentPage < totalPages) {
+                        showPage(currentPage + 1);
+                    } else {
+                        currentPage = parseInt($(this).text());
+                        console.log($(this)[0].innerText);
+                        showPage(currentPage);
+                    }
+                    // generatePagination();
+                });
+            }).catch((error) => {
+            console.log(error);
+        });
+    });
+
+
+    $("#")
+
 
     $("#formFile1").change(function (event) {
         // 首先移除所有的列表
-        $("#file-list-container").empty();
-        $("#pagination").css({
-            "display": "none"
-        });
+        init();
+        pagination1.show();
         files = event.target.files;
         let file_count = files.length;
-        console.log(file_count);
-        if (file_count > 0)
-            $("#slide_down_button").prop('disabled', false);
-        if (file_count > 5) {
-            $("#pagination").show();
-        }
-
         let new_item = "<li class=\"list-group-item\">\n" +
             "                        <input class=\"form-check-input me-1\" type=\"checkbox\" value=\"\">\n" +
             "                        <label class=\"form-check-label\"  for=\"firstCheckbox\"></label>\n" +
             "                    </li>";
         for (let i = 0; i < file_count; i++)
             $("#file-list-container").append(new_item);
-
         // 遍历列表项，向其中添加元素
         $("#file-list-container label").each((index, element) => {
             console.log(element);
@@ -54,7 +179,20 @@ $(function () {
         });
 
 
-    })
+        if (file_count > 0 && file_count <= 5) {
+            $("#slide_down_button").prop('disabled', false);
+            previous_page.show();
+            next_page.show();
+        } else {
+            previous_page.attr('disabled', false);
+            next_page.attr('disabled', false);
+            // 需要进行分页
+            const pageCount = Math.floor(file_count / 5) + 1;
+            let currentPage = 1;
+        }
+
+
+    });
 
     $("#CommitBtn").click(function (event) {
         const length = files.length;
@@ -87,5 +225,7 @@ $(function () {
         console.log("click radio1")
         FileOrInput = 0;
         console.log(FileOrInput);
-    })
+    });
+
+
 });

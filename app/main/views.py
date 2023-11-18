@@ -1,16 +1,19 @@
+import json
 import random
 import string
+import sqlalchemy.exc
 from . import main
 from flask import render_template, request, current_app, jsonify
 import os
-from .errors import unsupported_media_type, arg_required
+from .errors import unsupported_media_type, arg_required, file_not_found
 from ..Convertor import Convertor
 from ..SimhashSimilarity import SimhashSimilarity
 from ..CosineSimilarity import CosineSimilarity
 from ..model import Docx
 from datetime import datetime
 from .. import db
-from app.Docx import Document
+from app.Docx import Documents, Document
+from docx import Document as docx_document
 
 
 def is_file_extension_allowed(filename: str) -> bool:
@@ -26,8 +29,9 @@ def convert_file_type(file_path):
     :return:
     """
     if file_path.endswith('.doc'):
-        output_filepath = os.path.join(file_path.rsplit('.', 1)[0], '.docx')
+        output_filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], file_path.rsplit('.', 1)[0] + '.docx')
         Convertor.convert(file_path, output_filepath)
+        os.remove(os.path.join(current_app.config['UPLOAD_FOLDER'], file_path))
         return output_filepath
     return file_path
 
@@ -65,21 +69,30 @@ def upload_file():
         if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
             os.mkdir(current_app.config['UPLOAD_FOLDER'])
 
-        if file1.filename > current_app.config['MAX_FILENAME_LENGTH']:
-            rename = str(int(datetime.timestamp(datetime.utcnow())))[-5:] + random.choice(string.ascii_letters)
+        file1_path = convert_file_type(file1.filename)
+
+        if len(file1.filename) > current_app.config['MAX_FILENAME_LENGTH']:
+            rename = str(int(datetime.timestamp(datetime.utcnow())))[-5:] + random.choice(
+                string.ascii_letters) + '.docx'
         else:
             rename = file1.filename
-        file1.save(os.path.join(current_app.config['UPLOAD_FOLDER']), rename)
-        file1_path = convert_file_type(rename)
+        save_path = os.path.join(current_app.config['UPLOAD_FOLDER'], rename)
 
         time = datetime.utcnow()
         time_stamp = str(int(datetime.timestamp(time)))
         client_ip = str(request.remote_addr)
-        doc = Docx(file_path=file1_path, upload_time=time, timestamp=time_stamp, client_ip=client_ip)
+        file1.save(save_path)
+        doc = docx_document(save_path)
+        author = doc.core_properties.author if hasattr(doc.core_properties, 'author') else None
+        created = doc.core_properties.created if hasattr(doc.core_properties, 'created') else None
+        modified = doc.core_properties.modified if hasattr(doc.core_properties, 'modified') else None
+        last_save_by = doc.core_properties.last_modified_by if hasattr(doc.core_properties,
+                                                                       'last_modified_by') else None
+        doc = Docx(save_path=save_path, filename=file1_path, upload_time=time, timestamp=time_stamp,
+                   client_ip=client_ip, author=author, created=created, modified=modified, last_saved_by=last_save_by)
         db.session.add(doc)
         db.session.commit()
         return doc.to_json()
-
     else:
         info = (f"request file types are showing as bellow:{current_app.config.ALLOWED_EXTENSION},"
                 f"while your file are {file1.filename.rsplit('.', 1)[-1]}")
@@ -95,9 +108,24 @@ def get_my_file():
     request_ip = request.remote_addr
     file_list = Docx.query.filter_by(client_ip=request_ip).all()
 
-    file_name_list = [i.file_path for i in file_list]
+    # li = []
+    # for file in file_list:
+    #     li.append(file.to_json())
+
+    # 返回文件名
+    filenames = []
+    authors = []
+    for file in file_list:
+        filenames.append(file.filename)
+        if file.author is not None:
+            authors.append(file.author)
+        else:
+            authors.append('No author info.')
+
     return jsonify({
-        'filenames': file_name_list
+        'file_count': len(file_list),
+        'filenames': filenames,
+        'authors': authors
     })
 
 
@@ -109,6 +137,26 @@ def get_most_similar():
     """
     request_ip = request.remote_addr
     file_list = Docx.query.filter_by(client_ip=request_ip).all()
-    documents_list = []
-    for file in file_list:
-        documents_list.append(Document(file.file_path))
+    documents_list = [document.file_path for document in file_list]
+    documents = Documents(documents_list)
+
+    key, value = documents.get_most_similar
+
+    return jsonify({
+        'most_similar': str((key, value))
+    })
+
+
+@main.route('/get_docx/<int:file_index>', methods=['GET', 'POST'])
+def get_docx(file_index):
+    file = Docx.query.get(file_index)
+    if file is None:
+        info = f"the document with index = {file_index} you request is not found in server"
+        res = file_not_found(info=info)
+        return res
+    else:
+        document = Document(file.filename)
+        res = file.to_json()
+        json_dict = json.loads(res)
+        json_dict['text'] = document.text
+        return jsonify(json_dict)

@@ -9,6 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/UploadFolder" />
       <excludeFolder url="file://$MODULE_DIR$/test_files" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/temp_file" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10 (TextSimilarity)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

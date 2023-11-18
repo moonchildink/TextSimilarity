@@ -21,64 +21,83 @@
 
 <body>
 <div class="body" id="main">
-    <header>
-        <h1 id='head'>使用flask+html+js实现文本相似度查询</h1>
-    </header>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navBar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Word文档相似度比较</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item" id="uploadFilePageNav">
+                        <a class="nav-link active" aria-current="page" href="#">上传文件</a>
+                    </li>
+                    <li class="nav-item" id="myFilePageNav">
+                        <a class="nav-link" href="#">我的文件</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            {#            <button class="btn btn-primary me-md-2" type="button">文档比较</button>#}
+            {#            <button class="btn btn-primary" type="button">相似度</button>#}
+            <button type="button" class="btn btn-outline-dark" id = 'checkSimilarityButton'>Text Similarity</button>
+        </div>
+    </nav>
     <main>
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-            <label class="btn btn-outline-primary" for="btnradio1">提交文件</label>
-        </div>
-
-        <div id="inputFile">
-            <div class="input-group">
-                <input type="file" class="form-control" aria-describedby="inputGroupFileAddon04"
-                       aria-label="Upload"
-                       accept=".txt,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                       id="formFile1" multiple="multiple">
-                <button class="btn btn-outline-primary" type="button" id="slide_down_button" disabled
-                        data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-controls="collapseExample">
-                    展开
-                </button>
+        <div id="uploadPage">
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group" id="topButton">
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="btnradio1">提交文件</label>
             </div>
-            <div class="collapse" id="collapseExample">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <ul class="list-group" id='file-list-container'></ul>
-                    </div>
-                    <div class="card-footer text-body-secondary">
-                        <nav aria-label="Page navigation example" id="pagination">
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+            <div id="inputFile">
+                <div class="input-group">
+                    <input type="file" class="form-control" aria-describedby="inputGroupFileAddon04"
+                           aria-label="Upload"
+                           accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                           id="formFile1" multiple="multiple">
+                    <button class="btn btn-outline-primary" type="button" id="slide_down_button" disabled
+                            data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-controls="collapseExample">
+                        展开
+                    </button>
                 </div>
+                <div class="collapse" id="collapseExample">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <ul class="list-group" id='file-list-container'></ul>
+                        </div>
+                        <div class="card-footer text-body-secondary">
 
+                            <nav aria-label="Page navigation example" id="pagination1">
+                                <ul class="pagination">
+
+                                </ul>
+                            </nav>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="button" id='bottomButton'>
+                <button id="CommitBtn">提交</button>
             </div>
         </div>
+        <div id="myFilePage" style="display: none">
+            <div id="ordered-list">
+                <ul class="list-group list-group-numbered" id='myFileList'></ul>
+            </div>
+            <nav aria-label="Page navigation example" id="pagination2">
+                <ul class="pagination align-center">
+
+                </ul>
+            </nav>
 
 
-        <div class="button">
-            <button id="CommitBtn">提交</button>
         </div>
-
-
     </main>
-
-
 </div>
 </body>
 </html>

@@ -1,9 +1,24 @@
 import os.path
-from SimhashSimilarity import SimhashSimilarity
-from CosineSimilarity import CosineSimilarity
+from .SimhashSimilarity import SimhashSimilarity
+# from ConsineSimilarity import ConsineSimilarity
+from .CosineSimilarity import CosineSimilarity
 from bs4 import BeautifulSoup
 import mammoth
 from flask import current_app
+
+
+class Txt:
+    def __init__(self, filepath):
+        self.filepath = filepath
+        try:
+            with open(filepath, 'r') as file:
+                self.content = file.read()
+        except FileNotFoundError as e:
+            pass
+
+    @property
+    def text(self):
+        return self.content
 
 
 class Document:
@@ -17,6 +32,7 @@ class Document:
             self.convert_docx_to_markdown()
         except FileNotFoundError as e:
             pass
+            # self.text = None
         except Exception as e:
             pass
 
