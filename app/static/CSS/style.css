@@ -1,6 +1,5 @@
-/* 设置全局字体和背景颜色 */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Times New Roman', '华文仿宋', 'Roboto', sans-serif;
     background-color: #FAFAFA;
 }
 
@@ -12,12 +11,6 @@ body {
     border-radius: 4px;
     box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
     background-color: white;
-
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*align-items: center;*/
-    /*justify-content: center;*/
-    /*height: 100vh;*/
 }
 
 /* 设置标题的样式 */
@@ -98,9 +91,33 @@ body {
     margin-top: auto;
 }
 
-
 .spinner {
     position: fixed;
-    top:50%;
-    left:50%;
+    top: 50%;
+    left: 50%;
+}
+
+#navBar {
+    flex: 0 0 auto;
+}
+
+#showContentPage {
+    flex: 1; /* Make showContentPage take the remaining height */
+    width: 80vw;
+    left: 10vw;
+    top: 8vw;
+    display: flex;
+    justify-content: center; /* Center children horizontally */
+    align-items: center;
+}
+
+#LeftSection, #RightSection, #newChild {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    margin: 10px;
 }

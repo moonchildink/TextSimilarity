@@ -52,6 +52,8 @@ $(function () {
         $("#uploadPage").hide();
         $("#myFilePage").hide();
         $("#showContentPage").show();
+        $("#LeftSection").hide();
+        $("#RightSection").hide();
     }
 
 
@@ -67,31 +69,26 @@ $(function () {
         // 从服务器获取信息
         hide_all();
         addSpinner();
-        let reader = new FileReader();
         getRequest('/most_similar')
             .then((res) => {
                 $("#showContentPage #spinner").hide();
-                $("#LeftSection").show();
-                $("#RightSection").show();
-                console.log(res);
                 let file1 = res.files[0];
                 let file2 = res.files[1];
                 let similar = res.value;
                 return [file1, file2];
             }).then((res) => {
-            console.log(res);
             getRequest('/get_docx/' + res[0]).then(response => {
                 let left_section = $("#LeftSection");
                 left_section.show();
-                left_section.innerHTML = response;
-            })
+                left_section.append(response);
+            });
             return res[1];
-        }).then((value) => {
-
-            console.log(value);
-            // getRequest('/get_docx/' + value).then(response => response.text()).then(file2Content => {
-            //     $("#RightSection").innerHTML = file2Content;
-            // })
+        }).then((value) => {  // 其实此处pycharm给出的value的类型是不对的。value等于上边的res[1];
+            getRequest('/get_docx/' + value).then(response2 => {
+                let right_section = $("#RightSection");
+                right_section.show();
+                right_section.append(response2);
+            });
         }).catch((reject) => {
             console.log(reject);
         })
