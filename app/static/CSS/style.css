@@ -1,5 +1,5 @@
 body {
-    font-family: 'Times New Roman', '华文仿宋', 'Roboto', sans-serif;
+    font-family: 'Times New Roman', 'Roboto', sans-serif;
     background-color: #FAFAFA;
 }
 
@@ -109,9 +109,20 @@ body {
     display: flex;
     justify-content: center; /* Center children horizontally */
     align-items: center;
+    flex-direction: column;
 }
 
-#LeftSection, #RightSection, #newChild {
+#titleLine {
+    width: inherit;
+    text-align: center;
+}
+
+#Paragraph {
+    display: flex;
+    flex-direction: row;
+}
+
+#LeftSection, #RightSection {
     flex: 1;
     padding: 10px;
     border: 1px solid #ddd;

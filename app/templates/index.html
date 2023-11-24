@@ -47,6 +47,8 @@
         </div>
     </nav>
     <main>
+
+
         <div id="uploadPage">
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group" id="topButton">
                 <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
@@ -68,15 +70,14 @@
                         <div class="card-body">
                             <ul class="list-group" id='file-list-container'></ul>
                         </div>
-                        <div class="card-footer text-body-secondary">
 
+                        <div class="card-footer text-body-secondary">
                             <nav aria-label="Page navigation example" id="pagination1">
                                 <ul class="pagination">
-
                                 </ul>
                             </nav>
-
                         </div>
+
                     </div>
 
                 </div>
@@ -85,6 +86,9 @@
                 <button id="CommitBtn">提交</button>
             </div>
         </div>
+
+
+
         <div id="myFilePage" style="display: none">
             <div id="ordered-list">
                 <ul class="list-group list-group-numbered" id='myFileList'></ul>
@@ -98,8 +102,13 @@
 
         </div>
         <div id="showContentPage" class='spinner'>
-            <div id="LeftSection" style="display: none"></div>
-            <div id="RightSection" style="display: none"></div>
+            <div class="alert alert-primary" id="titleLine" role="alert" style="display: none">
+            </div>
+            <div id="Paragraph">
+                <div id="LeftSection" style="display: none"></div>
+                <div id="RightSection" style="display: none"></div>
+            </div>
+
         </div>
     </main>
 </div>

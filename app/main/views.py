@@ -108,9 +108,6 @@ def get_my_file():
     request_ip = request.remote_addr
     file_list = Docx.query.filter_by(client_ip=request_ip).all()
 
-    # li = []
-    # for file in file_list:
-    #     li.append(file.to_json())
 
     # 返回文件名
     filenames = []

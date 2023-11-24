@@ -43,8 +43,6 @@ $(function () {
         // myFileList.css({'display': 'none'});
         $("#file-list-container").empty();
         pagination1.hide();
-        previous_page.hide();
-        next_page.hide();
     }
 
 
@@ -54,6 +52,7 @@ $(function () {
         $("#showContentPage").show();
         $("#LeftSection").hide();
         $("#RightSection").hide();
+        $("#titleLine").hide();
     }
 
 
@@ -75,6 +74,9 @@ $(function () {
                 let file1 = res.files[0];
                 let file2 = res.files[1];
                 let similar = res.value;
+                let titleLine = $("#titleLine");
+                titleLine.show();
+                titleLine.text(file1 + "与" + file2 + "最为相似：" + similar.toString());
                 return [file1, file2];
             }).then((res) => {
             getRequest('/get_docx/' + res[0]).then(response => {
@@ -199,7 +201,6 @@ $(function () {
     $("#formFile1").change(function (event) {
         // 首先移除所有的列表
         init();
-        pagination1.show();
         files = event.target.files;
         let file_count = files.length;
         let new_item = "<li class=\"list-group-item\">\n" +
@@ -208,7 +209,7 @@ $(function () {
             "                    </li>";
         for (let i = 0; i < file_count; i++)
             $("#file-list-container").append(new_item);
-        // 遍历列表项，向其中添加元素
+
         $("#file-list-container label").each((index, element) => {
             console.log(element);
             let file_name = files[index].name;
@@ -222,14 +223,14 @@ $(function () {
 
         if (file_count > 0 && file_count <= 5) {
             $("#slide_down_button").prop('disabled', false);
-            previous_page.show();
-            next_page.show();
+            // previous_page.show();
+            // next_page.show();
         } else {
-            previous_page.attr('disabled', false);
-            next_page.attr('disabled', false);
+            // previous_page.attr('disabled', false);
+            // next_page.attr('disabled', false);
             // 需要进行分页
-            const pageCount = Math.floor(file_count / 5) + 1;
-            let currentPage = 1;
+            // const pageCount = Math.floor(file_count / 5) + 1;
+            // let currentPage = 1;
         }
 
 
