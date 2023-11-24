@@ -14,6 +14,8 @@ $(function () {
     }
 
     async function getRequest(url) {
+        let currentTime = new Date().getTime();
+        console.log(currentTime);
         return new Promise((res, reject) => {
             $.ajax({
                 url: url,
@@ -46,13 +48,59 @@ $(function () {
     }
 
 
-    $("#checkSimilarityButton").click((event) => {
+    function hide_all() {
+        $("#uploadPage").hide();
+        $("#myFilePage").hide();
+        $("#showContentPage").show();
+    }
 
+
+    function addSpinner() {
+        let spinner = "<div class=\"spinner-border\" id = \"spinner\" role=\"status\">\n" +
+            "                <span class=\"visually-hidden spinner\">Loading...</span>\n" +
+            "            </div>";
+        $("#showContentPage").append(spinner);
+    }
+
+
+    $("#checkSimilarityButton").click((event) => {
+        // 从服务器获取信息
+        hide_all();
+        addSpinner();
+        let reader = new FileReader();
+        getRequest('/most_similar')
+            .then((res) => {
+                $("#showContentPage #spinner").hide();
+                $("#LeftSection").show();
+                $("#RightSection").show();
+                console.log(res);
+                let file1 = res.files[0];
+                let file2 = res.files[1];
+                let similar = res.value;
+                return [file1, file2];
+            }).then((res) => {
+            console.log(res);
+            getRequest('/get_docx/' + res[0]).then(response => {
+                let left_section = $("#LeftSection");
+                left_section.show();
+                left_section.innerHTML = response;
+            })
+            return res[1];
+        }).then((value) => {
+
+            console.log(value);
+            // getRequest('/get_docx/' + value).then(response => response.text()).then(file2Content => {
+            //     $("#RightSection").innerHTML = file2Content;
+            // })
+        }).catch((reject) => {
+            console.log(reject);
+        })
     })
 
     $("#uploadFilePageNav").click((event) => {
         $("#uploadPage").show();
         $("#myFileList").hide();
+        $("#pagination2").hide();
     });
 
     $("#myFilePageNav").click((event) => {
@@ -144,16 +192,12 @@ $(function () {
                         console.log($(this)[0].innerText);
                         showPage(currentPage);
                     }
-                    // generatePagination();
+                    generatePagination();
                 });
             }).catch((error) => {
             console.log(error);
         });
     });
-
-
-    $("#")
-
 
     $("#formFile1").change(function (event) {
         // 首先移除所有的列表

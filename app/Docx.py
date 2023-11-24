@@ -81,11 +81,12 @@ class Documents:
         self.sorted_simhash_dict = None
         self.sorted_cosine_dict = None
         self.documents = documents_list
-        self.file_path = [os.path.join(current_app.config['UPLOAD_FOLDER'], document.input_path) for document in
+        self.file_path = [os.path.join(current_app.config['UPLOAD_FOLDER'], document) for document in
                           self.documents]
         self.dic = dict()
 
         for idx, elem in enumerate(self.documents):
+            print(elem)
             temp = Document(self.file_path[idx])
             self.dic[elem] = temp.text
 
@@ -102,15 +103,15 @@ class Documents:
         for key, value in self.dic.items():
             for key2, value2 in self.dic.items():
                 if key != key2:
-                    dict_key = str(zip(key, key2))
-                    self.simhash_dict[dict_key] = SimhashSimilarity(value, value2)
+                    dict_key = (key, key2)
+                    self.simhash_dict[dict_key] = SimhashSimilarity(value, value2).get_similarity
 
     def get_cosine_similarity(self):
         for key, value in self.dic.items():
             for key2, value2 in self.dic.items():
                 if key != key2:
-                    dict_key = str(zip(key, key2))
-                    self.cosine_dict[dict_key] = CosineSimilarity(value, value2)
+                    dict_key = (key, key2)
+                    self.cosine_dict[dict_key] = CosineSimilarity(value, value2).similarity
 
     def get_simhash_ranked_list(self):
         return self.sorted_simhash_dict
@@ -120,7 +121,7 @@ class Documents:
 
     @property
     def get_most_similar(self):
-        first_key, first_value = next(iter(self.cosine_dict.items()))
+        first_key, first_value = next(iter(self.sorted_cosine_dict))
         return first_key, first_value
 
     @property

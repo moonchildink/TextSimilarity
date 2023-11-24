@@ -3,7 +3,7 @@ import random
 import string
 import sqlalchemy.exc
 from . import main
-from flask import render_template, request, current_app, jsonify
+from flask import render_template, request, current_app, jsonify, send_from_directory
 import os
 from .errors import unsupported_media_type, arg_required, file_not_found
 from ..Convertor import Convertor
@@ -137,13 +137,17 @@ def get_most_similar():
     """
     request_ip = request.remote_addr
     file_list = Docx.query.filter_by(client_ip=request_ip).all()
-    documents_list = [document.file_path for document in file_list]
+    documents_list = [document.filename for document in file_list]
     documents = Documents(documents_list)
 
     key, value = documents.get_most_similar
+    print(f"key:{key},{type(key)}")
+    print(f"value:{value},{type(value)}")
+    print()
 
     return jsonify({
-        'most_similar': str((key, value))
+        'files': key,
+        'value': int(value)
     })
 
 
@@ -160,3 +164,15 @@ def get_docx(file_index):
         json_dict = json.loads(res)
         json_dict['text'] = document.text
         return jsonify(json_dict)
+
+
+@main.route('/get_docx/<filename>', methods=['GET'])
+def get_docx_by_filename(filename):
+    file = Docx.query.filter_by(filename=filename)
+    if file is None:
+        info = f"the document with name = {filename} you request is not found in server"
+        res = file_not_found(info=info)
+        return res
+    else:
+        html_name = filename.rsplit('.', 1)[0] + '.html'
+        return send_from_directory(current_app.config['TEMP_FILE_DIR'],html_name)
